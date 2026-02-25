@@ -21,7 +21,6 @@ namespace Bellota
         }
 
         static readonly IntPtr HWND_TOPMOST = new(-1);
-        static readonly IntPtr HWND_NOTOPMOST = new(-2);
         static readonly IntPtr HWND_BOTTOM = new(1);
         const uint SWP_NOMOVE = 0x0002;
         const uint SWP_NOSIZE = 0x0001;
@@ -39,6 +38,8 @@ namespace Bellota
         private bool _dragging = false;
         private Point _dragCursorPoint;
         private Point _dragFormPoint;
+
+        private string[] _images;
 
         public LoveClicker()
         {
@@ -90,19 +91,53 @@ namespace Bellota
                 Cursor = Cursors.Hand
             };
 
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cherry_blossom.gif");
-            _pictureBox.Image = Image.FromFile(path);
+            _images =
+            [
+                "cherry_blossom1.gif",
+                "cherry_blossom2.gif",
+                "cherry_blossom3.gif",
+                "cherry_blossom4.gif",
+                "cherry_blossom5.gif"
+            ];
+
+            LoadRandomImage();
 
             _pictureBox.MouseClick += (s, e) =>
             {
                 if (e.Button == MouseButtons.Left)
+                {
+                    if (Control.ModifierKeys == Keys.Control)
+                    {
+                        ChangeRandomImage();
+                        return;
+                    }
+
                     ShowLoveMessage("🤍");
+                }
 
                 if (e.Button == MouseButtons.Right)
                     this.Close();
             };
 
             this.Controls.Add(_pictureBox);
+        }
+
+        private void LoadRandomImage()
+        {
+            if (_images == null || _images.Length == 0)
+                return;
+
+            int index = _random.Next(_images.Length);
+
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _images[index]);
+
+            _pictureBox.Image?.Dispose();
+            _pictureBox.Image = Image.FromFile(path);
+        }
+
+        private void ChangeRandomImage()
+        {
+            LoadRandomImage();
         }
 
         private void SubscribeToInput()
@@ -145,14 +180,14 @@ namespace Bellota
 
         private async void BeatAnimation()
         {
-            int scale = 10;
+            int scale = 4;
             Size originalSize = new(ImageSize, ImageSize);
             Point originalLoc = new((this.Width - ImageSize) / 2, this.Height - ImageSize - 10);
 
             _pictureBox.Size = new Size(ImageSize + scale, ImageSize + scale);
             _pictureBox.Location = new Point(originalLoc.X - (scale / 2), originalLoc.Y - (scale / 2));
 
-            await Task.Delay(100);
+            await Task.Delay(160);
 
             _pictureBox.Size = originalSize;
             _pictureBox.Location = originalLoc;
@@ -160,7 +195,8 @@ namespace Bellota
 
         private async void ShowLoveMessage(string manualText = "")
         {
-            string[] mensajes = { "Te amo",
+            string[] mensajes = {
+                "Te amo",
                 "Tomá agüita",
                 "Sos linda",
                 "¡Ánimo!",
@@ -261,12 +297,26 @@ namespace Bellota
 
             if (isFullscreen)
             {
-                SetWindowPos(this.Handle, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+                SetWindowPos(
+                    this.Handle,
+                    HWND_BOTTOM,
+                    0, 0, 0, 0,
+                    SWP_NOMOVE |
+                    SWP_NOSIZE |
+                    SWP_NOACTIVATE);
+
                 this.TopMost = false;
             }
             else
             {
-                SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+                SetWindowPos(
+                    this.Handle,
+                    HWND_TOPMOST,
+                    0, 0, 0, 0,
+                    SWP_NOMOVE |
+                    SWP_NOSIZE |
+                    SWP_NOACTIVATE);
+
                 this.TopMost = true;
             }
         }
@@ -277,11 +327,17 @@ namespace Bellota
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                DialogResult result = MessageBox.Show(
-                    "¿Querés cerrarlo o lo dejamos cuidándote un ratito más?\n\nSolo quiere seguir tirando amorcito 💕",
-                    "Mensaje importante para mi Bellota",
-                    MessageBoxButtons.YesNo);
-                if (result == DialogResult.No) { e.Cancel = true; return; }
+                DialogResult result =
+                    MessageBox.Show(
+                        "¿Querés cerrarlo o lo dejamos cuidándote un ratito más?\n\nTe amo 💕",
+                        "Mensaje importante para mi Bellota",
+                        MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.No)
+                {
+                    e.Cancel = true;
+                    return;
+                }
             }
             _globalHook?.Dispose();
             base.OnFormClosing(e);
