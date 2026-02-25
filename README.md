@@ -1,4 +1,4 @@
-# 🌸 Bellota - LoveClicker
+# 🌸 LoveClicker - Bellota
 
 Una mini app de escritorio hecha en **C# WinForms** que muestra mensajes de amor flotantes mientras usás la computadora.
 
