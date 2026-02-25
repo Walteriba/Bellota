@@ -5,15 +5,11 @@ Una mini app de escritorio hecha en **C# WinForms** que muestra mensajes de amor
 Idea simple:  
 un recordatorio visual y lindo para alguien especial 💕
 
----
-
 ## 🎬 Demo
 
 <p align="center">
   <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDhyMjYwZnFmdWl4bjBydGVrMTgxanhweWJzMmNua25raWhtN3VubSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Ark5xhvlvRUBSPgP4F/giphy.gif" width="320"/>
 </p>
-
----
 
 ## ✨ Features
 
@@ -25,8 +21,6 @@ un recordatorio visual y lindo para alguien especial 💕
 - Click izquierdo → muestra mensaje  
 - Click derecho → intenta cerrar (con confirmación romántica 😌)  
 - Detecta fullscreen y no molesta mientras jugás o mirás algo  
-
----
 
 ## ⚙️ Tecnologías
 
