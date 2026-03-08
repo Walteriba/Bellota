@@ -20,6 +20,9 @@ namespace Bellota
             public int Left; public int Top; public int Right; public int Bottom;
         }
 
+        private System.Windows.Forms.Timer _appearTimer;
+        private int _targetY;
+
         static readonly IntPtr HWND_TOPMOST = new(-1);
         static readonly IntPtr HWND_BOTTOM = new(1);
         const uint SWP_NOMOVE = 0x0002;
@@ -72,10 +75,64 @@ namespace Bellota
             base.OnLoad(e);
             Rectangle workingArea = Screen.FromControl(this).WorkingArea;
             int margin = 5;
-            this.Location = new Point(
-                workingArea.Right - this.Width - margin,
-                workingArea.Bottom - this.Height - margin
-            );
+
+            int finalX = workingArea.Right - this.Width - margin;
+            int finalY = workingArea.Bottom - this.Height - margin;
+
+            _targetY = finalY;
+
+            this.Location = new Point(finalX, workingArea.Bottom + 50);
+            this.Opacity = 0;
+
+            StartMagicAppearance();
+        }
+
+        private void StartMagicAppearance()
+        {
+            _appearTimer = new System.Windows.Forms.Timer
+            {
+                Interval = 15
+            };
+
+            _appearTimer.Tick += (s, e) =>
+            {
+                if (this.Top > _targetY)
+                {
+                    this.Top -= 4;
+                }
+
+                if (this.Opacity < 1)
+                {
+                    this.Opacity += 0.05;
+                }
+
+                if (this.Top <= _targetY)
+                {
+                    this.Top = _targetY;
+                    this.Opacity = 1;
+                    _appearTimer.Stop();
+
+                    string[] saludos =
+                    [
+                        "Hola 🤍",
+                        "Hola amor 💕",
+                        "Hola reina 👑",
+                        "Hola bellota 🌰",
+                        "Hola mi vida 💗",
+                        "Hola hermosa ✨",
+                        "Hola preciosa 💖",
+                        "Hola mi cielo ☁️",
+                        "Hola bonita 🌸",
+                        "Hola corazón 💓",
+                        "Hola tesoro 💎",
+                    ];
+
+                    string saludo = saludos[_random.Next(saludos.Length)];
+                    ShowLoveMessage(saludo);
+                }
+            };
+
+            _appearTimer.Start();
         }
 
         private void CreateUI()
@@ -262,7 +319,7 @@ namespace Bellota
             {
                 Text = texto,
                 AutoSize = true,
-                ForeColor = Color.White,
+                ForeColor = Color.FromArgb(255, 220, 240),
                 Font = new Font("Segoe UI", 12, FontStyle.Bold | FontStyle.Italic),
                 BackColor = Color.Transparent
             };
@@ -276,13 +333,13 @@ namespace Bellota
 
             for (int i = 0; i < 30; i++)
             {
-                msg.Top -= 2;
+                msg.Top -= 1;
                 if (i > 15)
                 {
                     int alpha = Math.Max(0, 255 - ((i - 15) * 17));
                     msg.ForeColor = Color.FromArgb(alpha, msg.ForeColor);
                 }
-                await Task.Delay(40);
+                await Task.Delay(60);
             }
 
             this.Controls.Remove(msg);
