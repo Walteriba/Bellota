@@ -94,11 +94,13 @@ namespace Bellota
 
             _images =
             [
-                "cherry_blossom1.gif",
-                "cherry_blossom2.gif",
-                "cherry_blossom3.gif",
-                "cherry_blossom4.gif",
-                "cherry_blossom5.gif"
+                "background_1.gif",
+                "background_2.gif",
+                "background_3.gif",
+                "background_4.gif",
+                "background_5.gif",
+                "background_6.gif",
+                "background_7.gif"
             ];
 
             LoadImage();
